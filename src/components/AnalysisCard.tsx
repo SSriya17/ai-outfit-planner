@@ -32,7 +32,7 @@ export function AnalysisCard({ analysis, errorMessage, imageUri, isLoading, isSa
             <Text style={styles.category}>{analysis.category}</Text>
             <Text style={styles.detail}>{analysis.material} · {analysis.dominantColor} · {analysis.pattern}</Text>
             <Text style={styles.detail}>{analysis.fit} fit · {analysis.season} · {analysis.style}</Text>
-            <Text style={styles.explanation}>A considered piece with an easy-to-style silhouette and a refined neutral palette.</Text>
+            <Text style={styles.explanation}>This appears to be a {analysis.dominantColor.toLowerCase()} {analysis.material.toLowerCase()} {analysis.category.toLowerCase()} with a {analysis.fit.toLowerCase()} {analysis.style.toLowerCase()} fit. It works well for {analysis.season.toLowerCase()} styling and considered everyday outfits.</Text>
             <View style={styles.tags}>
               {analysis.tags.map((tag) => <Text key={tag} style={styles.tag}>{tag}</Text>)}
             </View>

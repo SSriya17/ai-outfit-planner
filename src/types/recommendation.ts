@@ -1,0 +1,5 @@
+export interface WeatherSnapshot { readonly observedAt: string; readonly condition: string; readonly temperature: number; readonly temperatureUnit: "celsius" | "fahrenheit"; readonly feelsLike: number; }
+export interface ConfidenceBreakdown { readonly overall: number; readonly weather: number; readonly style: number; readonly colorHarmony: number; readonly novelty: number; readonly comfort: number; }
+export interface GarmentReasoning { readonly itemId: string; readonly explanation: string; readonly confidence: number; }
+import type { ImageAsset } from "../data/mockData";
+export interface Recommendation { readonly id: string; readonly outfitId: string; readonly heroImage: ImageAsset | null; readonly generatedAt: string; readonly generatorVersion: string; readonly weather: WeatherSnapshot; readonly occasion: string; readonly style: string; readonly temperature: number; readonly temperatureUnit: "celsius" | "fahrenheit"; readonly confidence: ConfidenceBreakdown; readonly reasoningSummary: string; readonly garmentReasoning: readonly GarmentReasoning[]; }

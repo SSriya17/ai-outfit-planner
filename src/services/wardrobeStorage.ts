@@ -16,9 +16,13 @@ export interface SavedGarment {
   readonly confidence: number;
   readonly tags: readonly string[];
   readonly savedAt: string;
+  readonly isFavorite: boolean;
 }
 
 const storageKey = "wardrobe-ai.saved-garments";
+const listeners = new Set<() => void>();
+
+function notify(): void { listeners.forEach((listener) => listener()); }
 
 function isSavedGarment(value: unknown): value is SavedGarment {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
@@ -46,7 +50,7 @@ export function getSavedGarments(): readonly SavedGarment[] {
 
   try {
     const parsedValue: unknown = JSON.parse(storedValue);
-    return Array.isArray(parsedValue) ? parsedValue.filter(isSavedGarment) : [];
+    return Array.isArray(parsedValue) ? parsedValue.filter(isSavedGarment).map((item) => ({ ...item, isFavorite: "isFavorite" in item && item.isFavorite === true })) : [];
   } catch {
     return [];
   }
@@ -66,9 +70,14 @@ export function saveGarment(image: VisionReadyImage, analysis: VisionAnalysis): 
     confidence: analysis.confidence,
     tags: analysis.tags,
     savedAt: new Date().toISOString(),
+    isFavorite: false,
   };
   const garments = [garment, ...getSavedGarments()];
 
   localStorage.setItem(storageKey, JSON.stringify(garments));
+  notify();
   return garment;
 }
+
+export function replaceSavedGarments(garments: readonly SavedGarment[]): void { localStorage.setItem(storageKey, JSON.stringify(garments)); notify(); }
+export function subscribeToSavedGarments(listener: () => void): () => void { listeners.add(listener); return () => listeners.delete(listener); }
