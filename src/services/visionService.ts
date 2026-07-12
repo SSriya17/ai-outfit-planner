@@ -71,18 +71,20 @@ function parseVisionAnalysis(value: unknown): VisionAnalysis | null {
   };
 }
 
-function createUploadData(image: VisionReadyImage): FormData {
+async function createUploadData(image: VisionReadyImage): Promise<FormData> {
   const formData = new FormData();
-  const file = {
-    uri: image.uri,
-    name: image.fileName ?? "garment.jpg",
-    type: image.mimeType ?? "image/jpeg",
-  } as NativeImageFile;
 
-  formData.append("image", file);
+  const response = await fetch(image.uri);
+  const blob = await response.blob();
+
+  formData.append(
+    "image",
+    blob,
+    image.fileName ?? "garment.jpg",
+  );
+
   return formData;
 }
-
 function toServiceError(error: unknown): VisionServiceError {
   if (!axios.isAxiosError(error)) return new VisionServiceError("We couldn't analyze that garment. Please try again.");
   if (error.code === "ECONNABORTED") return new VisionServiceError("The analysis timed out. Please try again.");
@@ -96,7 +98,7 @@ function toServiceError(error: unknown): VisionServiceError {
 
 export async function analyzeGarmentImage(image: VisionReadyImage): Promise<VisionAnalysis> {
   try {
-    const response = await axios.post<unknown>(`${apiUrl}/analyze`, createUploadData(image), {
+    const response = await axios.post<unknown>(`${apiUrl}/analyze`, await createUploadData(image), {
       headers: { Accept: "application/json" },
       timeout: requestTimeout,
     });

@@ -9,8 +9,25 @@ dotenv.config();
 
 const app = express();
 const port = Number(process.env.PORT ?? 3001);
+const allowedOrigins = [
+  "http://localhost:8081",
+  "http://localhost:19006",
+  process.env.FRONTEND_ORIGIN,
+].filter((origin): origin is string => Boolean(origin));
 
-app.use(cors());
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error("Origin is not allowed by CORS."));
+  },
+}));
+app.get("/health", (_request, response) => {
+  response.status(200).json({ status: "ok" });
+});
 app.use("/analyze", analyzeRouter);
 app.use(errorHandler);
 

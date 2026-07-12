@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type { VisionReadyImage } from "../services/imagePicker";
 import { analyzeGarmentImage, type VisionAnalysis } from "../services/visionService";
@@ -7,6 +7,7 @@ interface UseVisionAnalysisResult {
   readonly analysis: VisionAnalysis | null;
   readonly isAnalyzing: boolean;
   readonly errorMessage: string | null;
+  readonly retry: () => void;
 }
 
 const analysisErrorMessage = "We couldn't analyze that garment. Please try again.";
@@ -15,6 +16,8 @@ export function useVisionAnalysis(image: VisionReadyImage | null): UseVisionAnal
   const [analysis, setAnalysis] = useState<VisionAnalysis | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
+  const retry = useCallback(() => setAttempt((value) => value + 1), []);
 
   useEffect(() => {
     let isCurrent = true;
@@ -46,7 +49,7 @@ export function useVisionAnalysis(image: VisionReadyImage | null): UseVisionAnal
     return () => {
       isCurrent = false;
     };
-  }, [image]);
+  }, [attempt, image]);
 
-  return { analysis, isAnalyzing, errorMessage };
+  return { analysis, isAnalyzing, errorMessage, retry };
 }

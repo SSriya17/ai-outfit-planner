@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import { ActionSheetIOS, Alert } from "react-native";
 
 import {
   type ImagePickerSource,
@@ -43,26 +42,16 @@ export function useImagePicker(): UseImagePickerResult {
     }
   }, []);
 
+  // TEMPORARY WEB FIX
+  // Opens browser photo picker directly
   const openImagePicker = useCallback(() => {
-    const chooseSource = (source: ImagePickerSource) => void selectImage(source);
-
-    if (process.env.EXPO_OS === "ios") {
-      ActionSheetIOS.showActionSheetWithOptions(
-        { options: ["Camera", "Photo Library", "Cancel"], cancelButtonIndex: 2 },
-        (selectedIndex) => {
-          if (selectedIndex === 0) chooseSource("camera");
-          if (selectedIndex === 1) chooseSource("library");
-        },
-      );
-      return;
-    }
-
-    Alert.alert("Capture Garment", "Choose an image source.", [
-      { text: "Camera", onPress: () => chooseSource("camera") },
-      { text: "Photo Library", onPress: () => chooseSource("library") },
-      { text: "Cancel", style: "cancel" },
-    ]);
+    void selectImage("library");
   }, [selectImage]);
 
-  return { selectedImage, isLoading, errorMessage, openImagePicker };
+  return {
+    selectedImage,
+    isLoading,
+    errorMessage,
+    openImagePicker,
+  };
 }

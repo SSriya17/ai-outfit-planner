@@ -18,7 +18,7 @@ const { recentOutfits, todayRecommendation, wardrobeItems } = homeMockData;
 
 export function HomeScreen() {
   const { errorMessage, isLoading, openImagePicker, selectedImage } = useImagePicker();
-  const { analysis, errorMessage: analysisErrorMessage, isAnalyzing } = useVisionAnalysis(selectedImage);
+  const { analysis, errorMessage: analysisErrorMessage, isAnalyzing, retry } = useVisionAnalysis(selectedImage);
   const { errorMessage: saveErrorMessage, isCurrentGarmentSaved, isSaving, saveCurrentGarment, savedGarments } = useWardrobe(selectedImage, analysis);
   const generatedRecommendation = useRecommendation(savedGarments, wardrobeItems);
 
@@ -36,7 +36,7 @@ export function HomeScreen() {
           title="Capture Garment"
         />
 
-        {selectedImage ? <AnalysisCard analysis={analysis} errorMessage={analysisErrorMessage ?? saveErrorMessage} imageUri={selectedImage.uri} isLoading={isAnalyzing} isSaved={isCurrentGarmentSaved} isSaving={isSaving} onSave={saveCurrentGarment} /> : null}
+        {selectedImage ? <AnalysisCard analysis={analysis} errorMessage={analysisErrorMessage ?? saveErrorMessage} imageUri={selectedImage.uri} isLoading={isAnalyzing} isSaved={isCurrentGarmentSaved} isSaving={isSaving} onRetry={retry} onSave={saveCurrentGarment} /> : null}
 
         <View style={styles.section}>
           <Text style={styles.sectionEyebrow}>TODAY'S RECOMMENDATION</Text>

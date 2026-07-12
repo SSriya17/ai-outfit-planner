@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: wardrobe-ai-server
+    runtime: node
+    rootDir: wardrobe-ai-server
+    buildCommand: npm install
+    startCommand: npm run start
+    healthCheckPath: /health
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.5-flash
+      - key: FRONTEND_ORIGIN
+        sync: false

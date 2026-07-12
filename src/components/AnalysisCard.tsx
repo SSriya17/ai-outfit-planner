@@ -11,9 +11,10 @@ interface AnalysisCardProps {
   readonly isSaving: boolean;
   readonly isSaved: boolean;
   readonly onSave: () => void;
+  readonly onRetry: () => void;
 }
 
-export function AnalysisCard({ analysis, errorMessage, imageUri, isLoading, isSaved, isSaving, onSave }: AnalysisCardProps) {
+export function AnalysisCard({ analysis, errorMessage, imageUri, isLoading, isSaved, isSaving, onRetry, onSave }: AnalysisCardProps) {
   return (
     <View style={[styles.card, shadows.card]}>
       <Image accessibilityLabel="Selected garment" source={{ uri: imageUri }} style={styles.image} />
@@ -26,7 +27,7 @@ export function AnalysisCard({ analysis, errorMessage, imageUri, isLoading, isSa
             <View style={styles.skeletonLineShort} />
           </View>
         ) : null}
-        {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+        {errorMessage ? <><Text style={styles.error}>{errorMessage}</Text><Pressable onPress={onRetry} style={styles.retry}><Text style={styles.retryText}>Retry Analysis</Text></Pressable></> : null}
         {analysis ? (
           <>
             <Text style={styles.category}>{analysis.category}</Text>
@@ -67,4 +68,6 @@ const styles = StyleSheet.create({
   skeletonLine: { backgroundColor: colors.surfaceMuted, borderCurve: "continuous", borderRadius: radii.small, height: 16, width: "100%" },
   skeletonLineShort: { backgroundColor: colors.surfaceMuted, borderCurve: "continuous", borderRadius: radii.small, height: 16, width: "72%" },
   error: { ...typography.body, color: colors.textSecondary },
+  retry: { alignItems: "center", borderColor: colors.border, borderRadius: radii.medium, borderWidth: 1, minHeight: 44, justifyContent: "center" },
+  retryText: { ...typography.bodyBold, color: colors.textPrimary },
 });
