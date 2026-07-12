@@ -1,2 +1,0 @@
-import { useEffect, useState } from "react"; import { localRecommendationRepository } from "../repositories/RecommendationRepository"; import type { Recommendation } from "../types/recommendation";
-export function useRecommendations(): readonly Recommendation[] { const [items, setItems] = useState<readonly Recommendation[]>([]); useEffect(() => { void localRecommendationRepository.getAll().then(setItems); }, []); return items; }

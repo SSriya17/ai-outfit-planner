@@ -45,17 +45,18 @@ export const typography = {
     fontWeight: "600" as const,
     lineHeight: 22,
   },
+  subheading: {
+    fontSize: 20,
+    fontWeight: "600" as const,
+    lineHeight: 28,
+  },
+  
   caption: {
     fontSize: 13,
     fontWeight: "400" as const,
     lineHeight: 18,
   },
-  subheading: {
-    fontSize: 20,
-    fontWeight: "600" as const,
-    letterSpacing: -0.2,
-    lineHeight: 26,
-  },
+
   heading: {
     fontSize: 28,
     fontWeight: "600" as const,
@@ -72,19 +73,30 @@ export const typography = {
 
 export const shadows = {
   card: {
-    boxShadow: "0px 8px 24px rgba(36, 35, 31, 0.08)",
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 12,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    elevation: 2,
   },
 } as const;
 
 export const motion = {
-  fast: 150,
-  normal: 250,
-  slow: 400,
+  fast:150,
+  normal:250,
+  slow:400
 } as const;
-
 export const layout = {
-  maxContentWidth: 640,
-  cardHeight: 180,
-  icon: 24,
-  avatar: 48,
+
+  maxContentWidth:640,
+
+  cardHeight:180,
+
+  icon:24,
+
+  avatar:48
+
 } as const;

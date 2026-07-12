@@ -1,3 +1,0 @@
-import type { Recommendation } from "../types/recommendation"; import { readStorage, writeStorage } from "../storage/storageClient";
-const key = "wardrobe-ai.recommendations"; export interface RecommendationRepository { getAll(): Promise<readonly Recommendation[]>; getById(id: string): Promise<Recommendation | null>; save(value: Recommendation): Promise<void>; }
-export const localRecommendationRepository: RecommendationRepository = { async getAll() { return readStorage<readonly Recommendation[]>(key, []); }, async getById(id) { return readStorage<readonly Recommendation[]>(key, []).find((item) => item.id === id) ?? null; }, async save(value) { writeStorage(key, [value, ...readStorage<readonly Recommendation[]>(key, [])]); } };

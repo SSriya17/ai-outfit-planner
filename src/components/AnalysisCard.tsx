@@ -1,3 +1,5 @@
+import { BadgeCheck, Palette, Ruler, Shirt, SunMedium } from "lucide-react-native";
+import { type ReactNode } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 import type { VisionAnalysis } from "../services/visionService";
@@ -31,13 +33,17 @@ export function AnalysisCard({ analysis, errorMessage, imageUri, isLoading, isSa
         {analysis ? (
           <>
             <Text style={styles.category}>{analysis.category}</Text>
-            <Text style={styles.detail}>{analysis.material} · {analysis.dominantColor} · {analysis.pattern}</Text>
-            <Text style={styles.detail}>{analysis.fit} fit · {analysis.season} · {analysis.style}</Text>
-            <Text style={styles.explanation}>This appears to be a {analysis.dominantColor.toLowerCase()} {analysis.material.toLowerCase()} {analysis.category.toLowerCase()} with a {analysis.fit.toLowerCase()} {analysis.style.toLowerCase()} fit. It works well for {analysis.season.toLowerCase()} styling and considered everyday outfits.</Text>
+            <View style={styles.metadataGrid}>
+              <AnalysisDetail icon={<Shirt color={colors.textSecondary} size={16} />} label="Material" value={analysis.material} />
+              <AnalysisDetail icon={<Palette color={colors.textSecondary} size={16} />} label="Color" value={analysis.dominantColor} />
+              <AnalysisDetail icon={<SunMedium color={colors.textSecondary} size={16} />} label="Season" value={analysis.season} />
+              <AnalysisDetail icon={<Ruler color={colors.textSecondary} size={16} />} label="Fit" value={analysis.fit} />
+              <AnalysisDetail icon={<BadgeCheck color={colors.textSecondary} size={16} />} label="Style" value={analysis.style} />
+              <AnalysisDetail icon={<BadgeCheck color={colors.textSecondary} size={16} />} label="Confidence" value={`${Math.round(analysis.confidence * 100)}%`} />
+            </View>
             <View style={styles.tags}>
               {analysis.tags.map((tag) => <Text key={tag} style={styles.tag}>{tag}</Text>)}
             </View>
-            <Text style={styles.confidence}>{Math.round(analysis.confidence * 100)}% confidence</Text>
             <Pressable accessibilityLabel="Save garment to wardrobe" accessibilityState={{ disabled: isSaved || isSaving }} disabled={isSaved || isSaving} onPress={onSave} style={[styles.saveButton, isSaved ? styles.saveButtonSaved : null]}>
               <Text style={[styles.saveButtonText, isSaved ? styles.saveButtonTextSaved : null]}>{isSaved ? "Saved to Wardrobe" : isSaving ? "Saving…" : "Save to Wardrobe"}</Text>
             </Pressable>
@@ -48,15 +54,21 @@ export function AnalysisCard({ analysis, errorMessage, imageUri, isLoading, isSa
   );
 }
 
+function AnalysisDetail({ icon, label, value }: { readonly icon: ReactNode; readonly label: string; readonly value: string }) {
+  return <View style={styles.metadataItem}><View style={styles.metadataLabel}><View>{icon}</View><Text style={styles.metadataLabelText}>{label}</Text></View><Text numberOfLines={1} style={styles.metadataValue}>{value}</Text></View>;
+}
+
 const styles = StyleSheet.create({
   card: { backgroundColor: colors.surface, borderCurve: "continuous", borderRadius: radii.large, overflow: "hidden" },
   image: { backgroundColor: colors.imagePlaceholder, height: 280, width: "100%" },
   content: { gap: spacing.md, padding: spacing.xl },
   eyebrow: { ...typography.eyebrow, color: colors.textSecondary },
   category: { ...typography.heading, color: colors.textPrimary },
-  detail: { ...typography.body, color: colors.textSecondary },
-  explanation: { ...typography.body, color: colors.textPrimary },
-  confidence: { ...typography.caption, color: colors.textTertiary },
+  metadataGrid: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
+  metadataItem: { backgroundColor: colors.surfaceMuted, borderRadius: radii.small, flexGrow: 1, gap: spacing.xs, minWidth: "46%", padding: spacing.md },
+  metadataLabel: { alignItems: "center", flexDirection: "row", gap: spacing.xs },
+  metadataLabelText: { ...typography.caption, color: colors.textSecondary },
+  metadataValue: { ...typography.bodyBold, color: colors.textPrimary },
   tags: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
   tag: { ...typography.caption, backgroundColor: colors.surfaceMuted, borderCurve: "continuous", borderRadius: radii.pill, color: colors.textSecondary, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
   saveButton: { alignItems: "center", backgroundColor: colors.brand, borderCurve: "continuous", borderRadius: radii.medium, minHeight: 52, justifyContent: "center", paddingHorizontal: spacing.lg },

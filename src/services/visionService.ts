@@ -27,7 +27,7 @@ type NativeImageFile = Blob & {
   readonly type: string;
 };
 
-const apiUrl = process.env.EXPO_PUBLIC_WARDROBE_API_URL ?? "http://localhost:3001";
+export const wardrobeApiUrl = process.env.EXPO_PUBLIC_WARDROBE_API_URL ?? "http://localhost:3001";
 const requestTimeout = 30_000;
 
 function isNonEmptyString(value: unknown): value is string {
@@ -98,7 +98,7 @@ function toServiceError(error: unknown): VisionServiceError {
 
 export async function analyzeGarmentImage(image: VisionReadyImage): Promise<VisionAnalysis> {
   try {
-    const response = await axios.post<unknown>(`${apiUrl}/analyze`, await createUploadData(image), {
+    const response = await axios.post<unknown>(`${wardrobeApiUrl}/analyze`, await createUploadData(image), {
       headers: { Accept: "application/json" },
       timeout: requestTimeout,
     });
