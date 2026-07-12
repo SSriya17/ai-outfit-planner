@@ -25,6 +25,7 @@ app.use(cors({
     callback(new Error("Origin is not allowed by CORS."));
   },
 }));
+app.use(express.json({ limit: "1mb" }));
 app.get("/health", (_request, response) => {
   response.status(200).json({ status: "ok" });
 });
