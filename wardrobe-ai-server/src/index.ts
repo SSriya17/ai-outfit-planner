@@ -9,15 +9,20 @@ dotenv.config();
 
 const app = express();
 const port = Number(process.env.PORT ?? 3001);
-const allowedOrigins = [
+function normalizeOrigin(origin: string): string {
+  return origin.replace(/\/+$/, "");
+}
+
+const allowedOrigins = new Set([
   "http://localhost:8081",
   "http://localhost:19006",
+  "https://ai-outfit-planner-five.vercel.app",
   process.env.FRONTEND_ORIGIN,
-].filter((origin): origin is string => Boolean(origin));
+].filter((origin): origin is string => Boolean(origin)).map(normalizeOrigin));
 
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.has(normalizeOrigin(origin))) {
       callback(null, true);
       return;
     }
