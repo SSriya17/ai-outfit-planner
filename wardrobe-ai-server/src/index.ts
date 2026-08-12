@@ -37,6 +37,6 @@ app.get("/health", (_request, response) => {
 app.use("/analyze", analyzeRouter);
 app.use(errorHandler);
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`WardrobeAI inference server listening on port ${port}.`);
 });
